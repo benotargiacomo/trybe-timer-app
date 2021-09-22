@@ -10,6 +10,7 @@ const RESET = {
   ss: 0,
   running: false,
   theme: "gray",
+  setup: true,
 };
 
 class Main extends Component {
@@ -17,23 +18,18 @@ class Main extends Component {
     super();
 
     this.state = {
-      mm: 10,
-      ss: 30,
+      mm: 0,
+      ss: 0,
       running: false,
       theme: "gray",
+      setup: true,
     };
 
     this.handleStart = this.handleStart.bind(this);
     this.handleStop = this.handleStop.bind(this);
     this.handleReset = this.handleReset.bind(this);
-  }
-
-  componentDidUpdate() {
-    // if (this.state === RESET) {
-    //   clearInterval(this.timer);
-    //   this.themeColor("gray");
-    //   console.log("ZEROU");
-    // }
+    this.onTimeChange = this.onTimeChange.bind(this);
+    this.switch = this.switch.bind(this);
   }
 
   themeColor(color) {
@@ -42,15 +38,16 @@ class Main extends Component {
     });
   }
 
-  runningSwitch(bool) {
-    this.setState((state) => ({
-      running: bool,
-    }))
+  switch(key, value) {
+    this.setState({
+      [key]: value,
+    });
   }
   
   // CRIAR CONTAGEM REGRESSIVA ANTES DE COMEÇAR!!!
   handleStart() {
-    this.runningSwitch(true);
+    this.switch('running', true);
+    this.switch('setup', false);
 
     this.timer = setInterval(() => {
       console.log('-1 segundo')
@@ -58,15 +55,9 @@ class Main extends Component {
         ss: prevState.ss - 1,
       }));
 
-      // if(this.state.mm) {
-      //   this.setState(() => ({
-      //     ss: 59,
-      //   }))
-      // }
-
       if (!this.state.mm && !this.state.ss) {
         console.log("FIM DO TEMPO")
-        this.runningSwitch(false);
+        this.switch('running', false);
         clearInterval(this.timer);
       } else if (!this.state.ss) {
         this.setState((prevState) => ({
@@ -82,7 +73,7 @@ class Main extends Component {
   }
 
   handleStop() {
-    this.runningSwitch(false);
+    this.switch('running', false);
     // DESABILITAR BOTÃO EM ALGUNS CASOS
     clearInterval(this.timer);
     this.themeColor("red");
@@ -95,13 +86,30 @@ class Main extends Component {
     console.log("RESET");
   }
 
+  onTimeChange(event) {
+    const { value } = event.target;
+    const getSeconds = value.toString().slice(-2);
+    const getMinutes = value.toString().slice(-4, -2);
+    const ss = parseInt(getSeconds);
+    const mm = parseInt(getMinutes);
+
+    console.log(`${mm}min ${ss}sec`)
+
+    this.setState({
+      mm,
+      ss,
+    })
+  }
+
   render() {
-    const { mm, ss, running, theme } = this.state;
+    const { mm, ss, running, theme, setup } = this.state;
 
     return (
       <Container theme={theme}>
-        {/* <SetTime /> */}
-        <Timer mm={mm} ss={ss} />
+        { setup
+          ? <SetTime onChange={ this.onTimeChange } /> 
+          : <Timer mm={mm} ss={ss} />
+        }
         <Controls
           running={running}
           handleStart={this.handleStart}

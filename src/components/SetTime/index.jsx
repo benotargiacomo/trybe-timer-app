@@ -3,14 +3,17 @@ import { Input } from './style';
 
 class SetTime extends Component {
   render() {
+    const { onChange } = this.props;
+
     return (
       <>
       <Input
-        size="4"
+        size="1"
         type="text"
-        pattern="[A-Za-z]{3}"
-        maxLength="4" 
-        placeholder="mm:ss"/>
+        maxLength="4"
+        placeholder="0"
+        onChange= { onChange }
+      />
       </>
     )
   }

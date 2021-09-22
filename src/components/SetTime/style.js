@@ -1,19 +1,31 @@
 import styled from 'styled-components';
 
 export const Input = styled.input`
-  padding: 6px 0;
-  
-  color: var(--green);
+  color: white;
   background-color: transparent;
-  
-  border: 3px solid var(--green);
-  border-radius: 4px;
-  
-  font-size: 4em;
+
+  /* border: 3px solid var(--green); */
+  /* border-radius: 4px; */
+
+  font-size: 22vw;
+  font-weight: bold;
   text-align: center;
 
   &:focus {
-    color: white;
     outline: none;
+  }
+
+  &::placeholder {
+  color: white;
+  opacity: .05;
 }
+
+  &:-ms-input-placeholder {
+  color: white;
+}
+
+  &::-ms-input-placeholder {
+  color: white;
+}
+
 `;
