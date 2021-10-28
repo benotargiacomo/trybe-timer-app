@@ -44,46 +44,48 @@ class Main extends Component {
     });
   }
   
-  // CRIAR CONTAGEM REGRESSIVA ANTES DE COMEÇAR!!!
   handleStart() {
     this.switch('running', true);
     this.switch('setup', false);
 
     this.timer = setInterval(() => {
-      console.log('-1 segundo')
-      this.setState((prevState) => ({
-        ss: prevState.ss - 1,
-      }));
-
       if (!this.state.mm && !this.state.ss) {
-        console.log("FIM DO TEMPO")
+        // FIM DO TEMPO
         this.switch('running', false);
         clearInterval(this.timer);
-      } else if (!this.state.ss) {
+      }
+
+      if (this.state.ss > 0) {
+        // -1 SEGUNDO
         this.setState((prevState) => ({
-          ss: !this.state.mm ? 0 : 60,
+          ss: prevState.ss - 1,
+        }))
+      }
+
+      if (!this.state.ss) {
+        // -1 MINUTO
+        this.setState((prevState) => ({
+          ss: !this.state.mm ? 0 : 59,
           mm: !this.state.mm ? 0 : prevState.mm - 1,
         }));
-        console.log("-1 minuto");
       }
     }, ONE_SECOND);
 
+    // START
     this.themeColor("green");
-    console.log("START");
   }
 
   handleStop() {
+    // STOP
     this.switch('running', false);
-    // DESABILITAR BOTÃO EM ALGUNS CASOS
     clearInterval(this.timer);
     this.themeColor("red");
-    console.log("STOP");
   }
 
   handleReset() {
+    // RESET
     this.setState(RESET);
     this.themeColor("gray");
-    console.log("RESET");
   }
 
   onTimeChange(event) {
@@ -92,8 +94,6 @@ class Main extends Component {
     const getMinutes = value.toString().slice(-4, -2);
     const ss = parseInt(getSeconds);
     const mm = parseInt(getMinutes);
-
-    console.log(`${mm}min ${ss}sec`)
 
     this.setState({
       mm,
